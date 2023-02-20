@@ -1,9 +1,15 @@
 package com.educandoweb.course.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_user") // User é uma palavra reservada do H2, renomeando para não haver conflito
 public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Funciona para a maioria dos bancos
     private Long id;
     private String name;
     private String email;
