@@ -1,5 +1,6 @@
 package com.educandoweb.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -34,6 +35,7 @@ public class Order implements Serializable {
         this.id = id;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT") // GMT = Padrão UTC global
     public Instant getMoment() {
         return moment;
     }
