@@ -1,5 +1,6 @@
 package com.educandoweb.course.entities;
 
+import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
@@ -15,15 +16,20 @@ public class Order implements Serializable {
     private Long id;
     private Instant moment;
 
+    // Internamente na nossa classe nós tratamos esse campo como Integer, pois salvamos um inteiro no banco
+    // Entretando, pro mundo externo ainda é OrderStatus (olhar construtor)
+    private Integer orderStatus;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
 
     public Order() {}
 
-    public Order(Long id, Instant moment, User client) {
+    public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
         this.moment = moment;
+        setOrderStatus(orderStatus);
         this.client = client;
     }
 
@@ -42,6 +48,18 @@ public class Order implements Serializable {
 
     public void setMoment(Instant moment) {
         this.moment = moment;
+    }
+
+    public OrderStatus getOrderStatus() {
+        // Pegando o número inteiro interno da classe e convertendo para OrderStatus
+        return OrderStatus.valueOf(orderStatus);
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        if (orderStatus != null) {
+            // Processo inverso do get, recebe um OrderStatus e internamente guarda um inteiro
+            this.orderStatus = orderStatus.getCode(); // Pega o número inteiro correspondente ao OrderStatus
+        }
     }
 
     public User getClient() {
