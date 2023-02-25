@@ -1,6 +1,7 @@
 package com.educandoweb.course.entities;
 
 import com.educandoweb.course.entities.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Table(name = "tb_order_item")
 public class OrderItem implements Serializable {
     @EmbeddedId
-    private OrderItemPK id;
+    private OrderItemPK id = new OrderItemPK(); // Sempre que você criar uma classe auxiliar para id composto, sempre tem que instanciar ela
 
     private Integer quantity;
     private Double price;
@@ -27,6 +28,7 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
+    @JsonIgnore // Esse getOrder chamava o Order associado ao OrderItem, o Order por sua vez chamava o OrderItem novamente e causava um ciclo
     public Order getOrder() {
         return id.getOrder();
     }
