@@ -91,6 +91,16 @@ public class Order implements Serializable {
         return items;
     }
 
+    // OBS: Na plataforma Java Enterprise (EE) o que vale é o Get! Por isso colocamos o get antes do nome do método para que isso apareça no JSON
+    public Double getTotal() {
+        double sum = 0.0;
+
+        for (OrderItem orderItem : items) {
+            sum += orderItem.getSubTotal();
+        }
+        return sum;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

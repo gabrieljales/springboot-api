@@ -61,6 +61,11 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
+    // OBS: Na plataforma Java Enterprise (EE) o que vale é o Get! Por isso colocamos o get antes do nome do método para que isso apareça no JSON
+    public Double getSubTotal() {
+        return price * quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
