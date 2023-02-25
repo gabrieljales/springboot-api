@@ -1,5 +1,6 @@
 package com.educandoweb.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -29,6 +30,9 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(mappedBy = "id.product") // No OrderItem nós temos o Id, que é do tipo OrderItemPK, que por sua vez tem o produto
+    private Set<OrderItem> items = new HashSet<>();
 
     public Product() {}
 
@@ -82,6 +86,17 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    @JsonIgnore // Esse getProduct chamava o Product associado ao OrderItem, o Product por sua vez chamava o OrderItem novamente e causava um ciclo
+    public Set<Order> getOrders() {
+        // Para cada OrderItem, vamos pegar o Order associado a ele!
+        Set<Order> set = new HashSet<>();
+        // Percorrendo a coleção items (coleção do tipo OrderItem associada ao produto) e para cada elemento da coleção, vamos pegar o objeto Order associado ao OrderItem
+        for (OrderItem orderItem : items) {
+            set.add(orderItem.getOrder());
+        }
+        return  set;
     }
 
     @Override
