@@ -4,6 +4,7 @@ import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
 import com.educandoweb.course.services.exceptions.DatabaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,12 +45,13 @@ public class UserService {
     }
 
     public User upddate(Long id, User obj) {
-        // getReferenceById: Instancia um usuário sem ir diretamente no banco de dados, ele deixa disponível um objeto monitorado pelo JPA para trabalharmos com ele e em seguida, realizar alguma operação com banco de dados
-        // Isso é melhor que usar o findById, já que ele necessariamente vai no BD e trás o objeto
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        
-        return  repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return  repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User obj) {
