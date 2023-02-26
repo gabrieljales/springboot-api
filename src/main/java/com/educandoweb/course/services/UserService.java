@@ -31,4 +31,20 @@ public class UserService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public User upddate(Long id, User obj) {
+        // getReferenceById: Instancia um usuário sem ir diretamente no banco de dados, ele deixa disponível um objeto monitorado pelo JPA para trabalharmos com ele e em seguida, realizar alguma operação com banco de dados
+        // Isso é melhor que usar o findById, já que ele necessariamente vai no BD e trás o objeto
+        User entity = repository.getReferenceById(id);
+        updateData(entity, obj);
+        
+        return  repository.save(entity);
+    }
+
+    private void updateData(User entity, User obj) {
+        // Atualiza os dados permitidos de entity com base no que chega em obj (exceções: Id e senha)
+        entity.setName(obj.getName());
+        entity.setEmail(obj.getEmail());
+        entity.setPhone(obj.getPhone());
+    }
 }
